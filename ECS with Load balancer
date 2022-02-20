@@ -1,0 +1,52 @@
+**How can I create an Application Load Balancer and then register Amazon ECS tasks automatically?**
+
+
+I want to create an Application Load Balancer, and then automatically register Amazon Elastic Container Service (Amazon ECS) tasks.
+
+Resolution
+Create a target group
+In the Amazon EC2 console, in the navigation pane, choose Target Groups.
+Choose Create target group.
+For Target group name, enter a name.
+For Target type, choose Instance or IP.
+Important: If your service's task definition uses the awsvpc network mode (required for the AWS Fargate launch type), you must choose IP as the target type. This is because tasks that use the awsvpc network mode are associated with an elastic network interface. These tasks aren't associated with an Amazon Elastic Compute Cloud (Amazon EC2) instance.
+For VPC, choose the VPC that you want to attach to your target group.
+Choose Create.
+Associate your target group with your load balancer
+In the navigation pane of the Amazon EC2 console, choose Load Balancers.
+Choose Create Load Balancer.
+For Application Load Balancer, choose Create.
+For Name, enter a name for your load balancer.
+In the Listeners section, for Load Balancer Protocol, choose HTTP or HTTPS.
+In the Availability Zones section, for VPC, choose your VPC.
+For Availability Zones, choose at least two subnet IDs.
+Choose Next: Configure Security Settings, and then choose Next: Configure Security Groups.
+In the Security Group ID column, choose the security group ID that you want to attach to the load balancer.
+Choose Next: Configure Routing.
+In the Target group section, for Target group, choose Existing target group.
+For Name, choose the target group that you created previously in the Create a target group section.
+Choose Next: Register Targets, Next: Review, Create.
+Create an Amazon ECS service using the previous Application Load Balancer
+Open the Amazon ECS console.
+In the navigation pane, choose Clusters, and then select your cluster.
+On the Services tab, choose Create.
+In the Configure service section, confirm that you have at least one task definition created.
+Note: To use a load balancer, you must use containerPort in your task definition.
+For Launch type, choose a launch type.
+For Service name, enter a service name.
+For Number of tasks, enter the number of tasks.
+Choose Next step.
+In the Load balancing section, for Load balancer type, choose Application Load Balancer.
+For Listener port, choose the application port that's used by your application (for example, 80:HTTP).
+For Target group name, choose the target group that you created previously in the Create a target group section.
+Choose Next step.
+For Service Auto Scaling, choose Do adjust the service's desired count or Do not adjust the service's desired count based on the setup of your Amazon ECS service application.
+Choose Next step, and then choose Create Service.
+Choose View Service, and then choose the Tasks tab.
+Choose the refresh icon, and then verify that your tasks are in the RUNNING state.
+View your tasks registered in the target group
+Open the Amazon EC2 console.
+Choose Target Groups, and then choose the target group that you created previously in the Create a target group section.
+To view the registered targets in the target group, choose the Targets tab.
+Note: To troubleshoot failed health checks for your Application Load Balancer, see How can I get my Amazon EC2 instance to pass the Application Load Balancer health check in Amazon ECS?
+
